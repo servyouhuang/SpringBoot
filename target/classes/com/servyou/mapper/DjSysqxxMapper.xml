@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.servyou.mapper.DjSysqxxMapper" >
+  <resultMap id="BaseResultMap" type="com.servyou.model.DjSysqxx" >
+    <id column="QYID" property="qyid" jdbcType="INTEGER" />
+    <id column="SEWBZ" property="sewbz" jdbcType="VARCHAR" />
+    <result column="QYMC" property="qymc" jdbcType="VARCHAR" />
+    <result column="NSRSBH" property="nsrsbh" jdbcType="VARCHAR" />
+    <result column="DQDM" property="dqdm" jdbcType="VARCHAR" />
+    <result column="XM" property="xm" jdbcType="VARCHAR" />
+    <result column="LXDH" property="lxdh" jdbcType="VARCHAR" />
+    <result column="DJSJ" property="djsj" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    QYID, SEWBZ, QYMC, NSRSBH, DQDM, XM, LXDH, DJSJ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.servyou.model.DjSysqxxKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from dj_sysqxx
+    where QYID = #{qyid,jdbcType=INTEGER}
+      and SEWBZ = #{sewbz,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.servyou.model.DjSysqxxKey" >
+    delete from dj_sysqxx
+    where QYID = #{qyid,jdbcType=INTEGER}
+      and SEWBZ = #{sewbz,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.servyou.model.DjSysqxx" >
+    insert into dj_sysqxx (QYID, SEWBZ, QYMC, 
+      NSRSBH, DQDM, XM, LXDH, 
+      DJSJ)
+    values (#{qyid,jdbcType=INTEGER}, #{sewbz,jdbcType=VARCHAR}, #{qymc,jdbcType=VARCHAR}, 
+      #{nsrsbh,jdbcType=VARCHAR}, #{dqdm,jdbcType=VARCHAR}, #{xm,jdbcType=VARCHAR}, #{lxdh,jdbcType=VARCHAR}, 
+      #{djsj,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.servyou.model.DjSysqxx" >
+    insert into dj_sysqxx
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qyid != null" >
+        QYID,
+      </if>
+      <if test="sewbz != null" >
+        SEWBZ,
+      </if>
+      <if test="qymc != null" >
+        QYMC,
+      </if>
+      <if test="nsrsbh != null" >
+        NSRSBH,
+      </if>
+      <if test="dqdm != null" >
+        DQDM,
+      </if>
+      <if test="xm != null" >
+        XM,
+      </if>
+      <if test="lxdh != null" >
+        LXDH,
+      </if>
+      <if test="djsj != null" >
+        DJSJ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qyid != null" >
+        #{qyid,jdbcType=INTEGER},
+      </if>
+      <if test="sewbz != null" >
+        #{sewbz,jdbcType=VARCHAR},
+      </if>
+      <if test="qymc != null" >
+        #{qymc,jdbcType=VARCHAR},
+      </if>
+      <if test="nsrsbh != null" >
+        #{nsrsbh,jdbcType=VARCHAR},
+      </if>
+      <if test="dqdm != null" >
+        #{dqdm,jdbcType=VARCHAR},
+      </if>
+      <if test="xm != null" >
+        #{xm,jdbcType=VARCHAR},
+      </if>
+      <if test="lxdh != null" >
+        #{lxdh,jdbcType=VARCHAR},
+      </if>
+      <if test="djsj != null" >
+        #{djsj,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.servyou.model.DjSysqxx" >
+    update dj_sysqxx
+    <set >
+      <if test="qymc != null" >
+        QYMC = #{qymc,jdbcType=VARCHAR},
+      </if>
+      <if test="nsrsbh != null" >
+        NSRSBH = #{nsrsbh,jdbcType=VARCHAR},
+      </if>
+      <if test="dqdm != null" >
+        DQDM = #{dqdm,jdbcType=VARCHAR},
+      </if>
+      <if test="xm != null" >
+        XM = #{xm,jdbcType=VARCHAR},
+      </if>
+      <if test="lxdh != null" >
+        LXDH = #{lxdh,jdbcType=VARCHAR},
+      </if>
+      <if test="djsj != null" >
+        DJSJ = #{djsj,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where QYID = #{qyid,jdbcType=INTEGER}
+      and SEWBZ = #{sewbz,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.servyou.model.DjSysqxx" >
+    update dj_sysqxx
+    set QYMC = #{qymc,jdbcType=VARCHAR},
+      NSRSBH = #{nsrsbh,jdbcType=VARCHAR},
+      DQDM = #{dqdm,jdbcType=VARCHAR},
+      XM = #{xm,jdbcType=VARCHAR},
+      LXDH = #{lxdh,jdbcType=VARCHAR},
+      DJSJ = #{djsj,jdbcType=TIMESTAMP}
+    where QYID = #{qyid,jdbcType=INTEGER}
+      and SEWBZ = #{sewbz,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByDays" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM dj_sysqxx
+    WHERE DATE(DJSJ)>=DATE_SUB( #{fssj,jdbcType=TIMESTAMP}, INTERVAL 7 DAY) AND #{fssj,jdbcType=TIMESTAMP}>DATE(DJSJ)
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dj_sysqxx
+    where QYID = #{qyid,jdbcType=INTEGER}
+  </select>
+</mapper>
