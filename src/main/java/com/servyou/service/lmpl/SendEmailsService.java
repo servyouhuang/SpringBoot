@@ -17,7 +17,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.servyou.exception.ClientException;
 import com.servyou.mapper.DjSysqxxMapper;
 import com.servyou.model.DjSysqxx;
 import com.servyou.service.ISendEmailsService;
@@ -48,7 +47,7 @@ public class SendEmailsService implements ISendEmailsService{
 	@Resource
 	private DjSysqxxMapper djSysqxxMapper;
 	@Resource
-	private CreateExcel createExcel;
+	private CreateExcelService createExcel;
 	private final static Logger LOG = LoggerFactory.getLogger(SendEmailsService.class);
 	//标志                                              
 	boolean flag = false;
@@ -63,8 +62,6 @@ public class SendEmailsService implements ISendEmailsService{
         mailSend.setPassword(passWord);//发件邮箱密码 ：wgbpvugywcyjdfba
           
         Properties props = new Properties();  
-        props.put("mail.smtp.auth", true);//是否校验（或者授权）：true 
-        
         //启用ssl加密，普通邮件传输格式： props.put("mail.smtp.starttls.enable", true);
 		try {
 			 MailSSLSocketFactory sslFactory = new MailSSLSocketFactory();
@@ -75,12 +72,12 @@ public class SendEmailsService implements ISendEmailsService{
 			LOG.info("启用SSL加密失败");
 		}
 		LOG.info("ssl加密传输成功");
+		props.put("mail.smtp.auth", true);//是否校验（或者授权）：true
 		mailSend.setJavaMailProperties(props);  
 		
         try{
         	 MimeMessage mimeMsg = mailSend.createMimeMessage();  
-             MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, true, "UTF-8"); 
-             String[] to = {"1187322296@qq.com", "huang@servyou.com.cn"};
+             MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, true, "UTF-8");
              helper.setTo(toAdress);//邮件接收地址  
              for(int i=0;i<toAdress.length;i++){
             	 LOG.info(toAdress[i]);
@@ -88,16 +85,18 @@ public class SendEmailsService implements ISendEmailsService{
              helper.setSubject(subject);//邮件主题 
 			 helper.setFrom(senderAdress,form);//邮件发送人-别名      
              LOG.info("邮件接收地址："+toAdress+",邮件主题："+subject+",邮件发件人(别名)："+form+",邮件内容："+text);
-             LOG.info(""+helper.getMimeMessage().getSubject());
              content = emailContent(text);
              if(!flag){
             	 content="最近7天内没有适合推荐的申请适用的企业";
         		 LOG.info("最近7天内没有适合推荐的申请适用的企业");
         	 }
         	 helper.setText(content, true);//邮件内容  
-        	 String fileName = createExcel.downloadChild();
+        	 String fileName = createExcel.downloadExcel();
         	 FileSystemResource Resource = new FileSystemResource(fileName); 
         	 LOG.info(Resource.toString());
+        	//取得根目录路径  
+    	     String rootPath=SendEmailsService.class.getResource("/").getFile().toString();
+    	     LOG.info("===================================>"+rootPath);
         	 helper.addAttachment(fileName,Resource);
              try{
             	 mailSend.send(mimeMsg);//发送邮件
@@ -136,7 +135,4 @@ public class SendEmailsService implements ISendEmailsService{
     	}
     	return content+"</table></body>";
     }
-    
-    
-	
 }
